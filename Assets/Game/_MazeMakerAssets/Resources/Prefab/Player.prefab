@@ -116,7 +116,7 @@ MonoBehaviour:
   _animator: {fileID: 9163997747224701795}
   direct: 0
   modelTransform: {fileID: 6748748496740398690}
-  speed: 40
+  speed: 30
   frontRayTransform: {fileID: 9113435277857965452}
   isMoving: 0
   isWin: 0

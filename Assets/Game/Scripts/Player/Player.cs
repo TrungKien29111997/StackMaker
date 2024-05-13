@@ -215,20 +215,20 @@ public class Player : MonoBehaviour
             if (BricksList.Count == 0)
             {
                 isStop = true;
-                ScenesManager.instance.Lose();
+                LevelManager.instance.Lose();
             }
         }
         if (other.gameObject.CompareTag("FinishBox"))
         {
             ClearBrick();
             _animator.SetInteger(aniIDSetInteger, (int)Ani.Win);
-            ScenesManager.instance.Win();
+            LevelManager.instance.Win();
         }
 
         if (other.gameObject.CompareTag("Diamond"))
         {
             isStop = true;
-            int diamondThisReceive = ScenesManager.instance.DiamondPoint();
+            int diamondThisReceive = LevelManager.instance.DiamondPoint();
             diamondCount += diamondThisReceive;
             UIManager.instance.SetDiamond(diamondCount);
             UIManager.instance.SetNumber(diamondThisReceive);

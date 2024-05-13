@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5355648070806570576}
   - component: {fileID: 5355648070806570579}
   m_Layer: 0
-  m_Name: SceneManager
+  m_Name: LevelManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -44,9 +44,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d44902a9cd03ad44bb0e3ef2ca9068f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 0}
-  startPoint: {fileID: 0}
-  fireWorks:
-  - {fileID: 0}
-  - {fileID: 0}
-  chest: {fileID: 0}
+  pivoteStart: {fileID: 1352729974112292, guid: 51814ab9541953a448daf1c374d630c4, type: 3}
+  pivoteBrick: {fileID: 1045506591760351, guid: f206ccc114e101b4dafffd4915d4a812, type: 3}
+  pivoteWall: {fileID: 1121066348938118, guid: 680fafd85c16f024192891099b1460ee, type: 3}
+  pivoteUnBrick: {fileID: 1293244031875415975, guid: 50c7535320f786d4286d60ca5630d31b, type: 3}
+  pivotePush: {fileID: 1335394330515411, guid: 58bccaa9158f7ae4089c8a8ccd023a65, type: 3}
+  pivoteDiamond: {fileID: 1011684169596390601, guid: df9478a87e82b9148a27293c5822d2c8, type: 3}
+  winArea: {fileID: 1377060364527856, guid: bec8fbf23e70b4f42b574dddd6681a4c, type: 3}

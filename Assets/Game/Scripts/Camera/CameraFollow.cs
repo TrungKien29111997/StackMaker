@@ -5,13 +5,14 @@ using UnityEngine;
 public class CameraFollow : MonoBehaviour
 {
     [SerializeField] GameObject cameraObj;
-    [SerializeField] Player player;
+    Player player;
     [SerializeField] float speedLerf = 2f;
     Vector3 startPos;
 
     private void Start()
     {
-        startPos = cameraObj.transform.localPosition ;
+        startPos = cameraObj.transform.localPosition;
+        if (player == null) player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
     }
 
     void Update()
