@@ -8,6 +8,9 @@ public class LevelManager : MonoBehaviour
 {
     Scene sceneLoaded;
     public static LevelManager instance;
+    [SerializeField] List<TextAsset> levelData = new List<TextAsset>();
+    [SerializeField] int levelCount;
+    public int CurrentLevel => levelCount;
 
     [SerializeField] GameObject pivoteStart;
     [SerializeField] GameObject pivoteBrick;
@@ -16,11 +19,12 @@ public class LevelManager : MonoBehaviour
     [SerializeField] GameObject pivotePush;
     [SerializeField] GameObject pivoteDiamond;
     [SerializeField] GameObject winArea;
+    [SerializeField] List<GameObject> contructionList;
 
-    GameObject player;
-    GameObject levelGroup;
-    List<ParticleSystem> fireWorks;
-    GameObject chest;
+    [SerializeField] Player player;
+    [SerializeField] Transform levelTransform;
+    [SerializeField] List<ParticleSystem> fireWorks;
+    [SerializeField] GameObject chest;
     int[,] map2D;
 
     const int diamondPerGet = 10;
@@ -34,13 +38,15 @@ public class LevelManager : MonoBehaviour
 
     private void Start()
     {
-        levelGroup = GameObject.Find("Level");
-        if (player == null) player = GameObject.FindGameObjectWithTag("Player");
+        levelCount = 0;
+        if (SceneManager.GetActiveScene().name != "LEVEL_EDITOR")
+        {
+            CreateLevel(0);
+        }
         Oninit();
-        CreateLevel();
     }
 
-    public void Oninit()
+    void Oninit()
     {
         sceneLoaded = SceneManager.GetActiveScene();
     }
@@ -68,30 +74,50 @@ public class LevelManager : MonoBehaviour
 
     public void ContinueGame()
     {
-        player.GetComponent<Player>().ContinuePlayer();
-        IdleUI();
+        player.ContinuePlayer();
+        UIManager.instance.IdleUIAni();
     }
 
-    public void NextLevel()
+    void WinUI()
     {
-        if (sceneLoaded.buildIndex < numberScene)
-        {
-            SceneManager.LoadScene(sceneLoaded.buildIndex + 1);
-        }
-        else
-        {
-            SceneManager.LoadScene(0);
-        }
+        UIManager.instance.WinUIAni();
+    }
+    void LoseUI()
+    {
+        UIManager.instance.LoseUIAni();
+    }
+
+    void NewLevel(int levelIndex)
+    {
+        ClearLevel();
+        CreateLevel(levelIndex);
+        player.OnInit();
+        UIManager.instance.OnInit();
     }
 
     public void PlayAgain()
     {
-        SceneManager.LoadScene(sceneLoaded.buildIndex);
+        NewLevel(levelCount);
     }
 
-    void CreateLevel()
+    public void NextLevel()
     {
-        string[] mapData = ReadLevelText(SceneManager.GetActiveScene().name);
+        if (levelCount < levelData.Count - 1)
+        {
+            NewLevel(++levelCount);
+        }
+        else
+        {
+            levelCount = 0;
+            NewLevel(0);
+        }
+    }
+
+
+    void CreateLevel(int levelIndex)
+    {
+        string data = levelData[levelIndex].text.Replace(Environment.NewLine, string.Empty);
+        string[] mapData = data.Split('-');
 
         int line = mapData.Length;
         int column = mapData[0].ToCharArray().Length;
@@ -112,7 +138,7 @@ public class LevelManager : MonoBehaviour
             for (int j = 0; j < map2D.GetLength(1); j++)
             {
                 float rotate = 0;
-                if (map2D[i, j] == (int)ConstrucIndex.WinPos)
+                if (map2D[i, j] == (int)ConstrucIndex.WinPos) // dong nay tim goc xoay WinPos
                 {
                     if (i < map2D.GetLength(0) -1)
                     {
@@ -147,7 +173,7 @@ public class LevelManager : MonoBehaviour
                         }
                     }
                 }
-                if (map2D[i, j] == (int)ConstrucIndex.PivotePush)
+                if (map2D[i, j] == (int)ConstrucIndex.PivotePush) // dong nay tim goc xoay PivotePush
                 {
                     if ((i < map2D.GetLength(0) - 1) && (j < map2D.GetLength(1) - 1))
                     {
@@ -202,11 +228,22 @@ public class LevelManager : MonoBehaviour
         }
     }
 
+    void ClearLevel()
+    {
+        for (int i = contructionList.Count -1; i >= 0; i--)
+        {
+            Destroy(contructionList[i]);
+            contructionList.Remove(contructionList[i]);
+        }
+
+    }
+
     void SpawnConstruction(int constructionIndex, int xNum, int yNum, float rotate)
     {
         if (constructionIndex != -1)
         {
-            GameObject tempConstruction = Instantiate(ConstructionType(constructionIndex), levelGroup.transform);
+            GameObject tempConstruction = Instantiate(ConstructionType(constructionIndex), levelTransform);
+            contructionList.Add(tempConstruction);
 
             tempConstruction.transform.localPosition = new Vector3(xNum, 0, yNum);
             tempConstruction.transform.localRotation = Quaternion.Euler(0, rotate, 0);
@@ -223,14 +260,6 @@ public class LevelManager : MonoBehaviour
             }
         }
     }
-
-    string[] ReadLevelText(string levelName)
-    {
-        TextAsset tempData = Resources.Load("MapData/" + levelName) as TextAsset;
-        string data = tempData.text.Replace(Environment.NewLine, string.Empty);
-        return data.Split('-');
-    }
-
     GameObject ConstructionType(int number)
     {
         GameObject spawnObj = null;
@@ -260,7 +289,6 @@ public class LevelManager : MonoBehaviour
         }
         return spawnObj;
     }
-
     enum ConstrucIndex
     {
         StartPos = 0,
@@ -270,18 +298,5 @@ public class LevelManager : MonoBehaviour
         PivotePush = 4,
         WinPos = 5,
         PivoteDiamond  = 6
-    }
-
-    void IdleUI()
-    {
-        UIManager.instance.IdleUIAni();
-    }
-    void WinUI()
-    {
-        UIManager.instance.WinUIAni();
-    }
-    void LoseUI()
-    {
-        UIManager.instance.LoseUIAni();
     }
 }

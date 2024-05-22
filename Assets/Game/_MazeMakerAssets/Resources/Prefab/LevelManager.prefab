@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5355648070806570576}
   - component: {fileID: 5355648070806570579}
+  - component: {fileID: 1364739392872367852}
   m_Layer: 0
   m_Name: LevelManager
   m_TagString: Untagged
@@ -44,6 +45,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d44902a9cd03ad44bb0e3ef2ca9068f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  levelData:
+  - {fileID: 4900000, guid: 225e838afb3bd8c4d9a5a7ec885da404, type: 3}
+  - {fileID: 4900000, guid: 2c89040f158709140b9f8a299fe5f1b1, type: 3}
+  - {fileID: 4900000, guid: 533fb01a0826c844e822b5abe06ddc7f, type: 3}
+  - {fileID: 4900000, guid: a93fa334afd70ff4592675bb41529155, type: 3}
+  - {fileID: 4900000, guid: 5968089df59637c48805e05df7855a28, type: 3}
   pivoteStart: {fileID: 1352729974112292, guid: 51814ab9541953a448daf1c374d630c4, type: 3}
   pivoteBrick: {fileID: 1045506591760351, guid: f206ccc114e101b4dafffd4915d4a812, type: 3}
   pivoteWall: {fileID: 1121066348938118, guid: 680fafd85c16f024192891099b1460ee, type: 3}
@@ -51,3 +58,17 @@ MonoBehaviour:
   pivotePush: {fileID: 1335394330515411, guid: 58bccaa9158f7ae4089c8a8ccd023a65, type: 3}
   pivoteDiamond: {fileID: 1011684169596390601, guid: df9478a87e82b9148a27293c5822d2c8, type: 3}
   winArea: {fileID: 1377060364527856, guid: bec8fbf23e70b4f42b574dddd6681a4c, type: 3}
+  fireWorks: []
+  chest: {fileID: 0}
+--- !u!114 &1364739392872367852
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5355648070806570578}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ad70c7e69a6888498d73d0d216d7859, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

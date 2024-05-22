@@ -4,21 +4,20 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    [SerializeField] Animator _animator;
+    [SerializeField] Animator anim;
 
     [Header("GeneralSettings")]
-    public Direct direct;
+    [SerializeField] Direct directPlayer;
     [SerializeField] Transform modelTransform;
     [SerializeField] float speed;
     [SerializeField] Transform frontRayTransform;
 
     [Header("Status")]
     [SerializeField] bool isMoving;
-    [SerializeField] bool isWin;
     [SerializeField] bool isStop;
 
     [Header("BrickSettings")]
-    public int brickCount;
+    [SerializeField] int brickCount;
     [SerializeField] LayerMask brickLayer;
     [SerializeField] List<GameObject> BricksList;
     public int brickLeft => BricksList.Count;
@@ -28,48 +27,45 @@ public class Player : MonoBehaviour
     float brickWallHeight;
 
     [Header("DiamondSettings")]
-    public int diamondCount;
+    [SerializeField] int diamondCount;
 
     // Private property
-    Vector3 startPoint;
-    Vector3 endPoint;
-    Vector3 targetPosition;
+    public Vector3 targetPosition;
     RaycastHit hitFront;
 
-    // AnimationID
-    int aniIDSetInteger;
+    // Animation
+    string currentAnim;
+    const string animIdle = "Idle";
+    const string animWin = "Win";
 
-    private void Awake()
-    {
-        OnInit();
-        aniIDSetInteger = Animator.StringToHash("AniFloat");
-    }
-
-    private void Start()
+    void Start()
     {
         OnInit();
     }
 
-    private void Update()
+    void Update()
     {
         modelTransform.forward = Vector3.forward;
-
         if (isStop) return;
-        if (isWin) return;
-
-        FindDirection();
+        ControlPlayer.instance.FindDirection(ref directPlayer);
         Control();     
     }
 
-    private void OnInit()
+    public void OnInit()
     {
-        direct = Direct.None;
-        brickCount = 0;
+        directPlayer = Direct.None;
         brickWallHeight = -0.5f;
-        isWin = false;
-        isStop = false;
+        Invoke(nameof(DelayStatus), 0.5f);
+        brickCount = 0;
         diamondCount = 0;
         UIManager.instance.SetDiamond(diamondCount);
+        ChangeAnim(animIdle);
+    }
+
+    void DelayStatus()
+    {
+        isStop = false;
+        isMoving = false;
     }
 
     void OnDespawn()
@@ -77,49 +73,15 @@ public class Player : MonoBehaviour
 
     }
 
-    void FindDirection()
-    {
-        bool start = true;
-        if (Input.GetMouseButtonDown(0))
-        {
-            startPoint = Input.mousePosition;
-            start = true;
-        }
-        if (Input.GetMouseButtonUp(0) && start)
-        {
-            endPoint = Input.mousePosition;
-            Vector3 tempVector = (endPoint - startPoint).normalized;
-            float angle = Vector3.Angle(tempVector, Vector3.up);
-            if (angle > 0 && angle < 45)
-            {
-                direct = Direct.Forward;
-            }
-            else if (angle > 45 && angle < 135 && tempVector.x > 0)
-            {
-                direct = Direct.Right;
-            }
-            else if (angle > 45 && angle < 135 && tempVector.x < 0)
-            {
-                direct = Direct.Left;
-            }
-            else if (angle > 135)
-            {
-                direct = Direct.Back;
-            }
-            Invoke(nameof(ResetDirection), 0.06f);
-            start = false;
-        }
-    }
-
     void Control()
     {
         if (FrontCheck())
         {
-            if (direct != Direct.None)
+            targetPosition = new Vector3(hitFront.collider.transform.position.x, transform.position.y, hitFront.collider.transform.position.z);
+            if (directPlayer != Direct.None)
             {
                 isMoving = true;
             }
-            targetPosition = new Vector3(hitFront.collider.transform.position.x, transform.position.y, hitFront.collider.transform.position.z);
         }
         else
         {
@@ -131,7 +93,7 @@ public class Player : MonoBehaviour
 
         if (!isMoving)
         {
-            switch (direct)
+            switch (directPlayer)
             {
                 case Direct.Forward:
                     transform.forward = Vector3.forward;
@@ -151,13 +113,18 @@ public class Player : MonoBehaviour
         }
         else
         {
+            directPlayer = Direct.None;
             transform.position = Vector3.MoveTowards(transform.position, targetPosition, Time.deltaTime * speed);
         }
     }
-
-    void ResetDirection()
+    void ChangeAnim(string animID)
     {
-        direct = Direct.None;
+        if (currentAnim != animID)
+        {
+            anim.ResetTrigger(currentAnim);
+            currentAnim = animID;
+            anim.SetTrigger(currentAnim);
+        }
     }
 
     bool FrontCheck()
@@ -166,7 +133,7 @@ public class Player : MonoBehaviour
         return hitFront.collider != null;
     }
 
-    void AddBrick()
+    public void AddBrick()
     {
         brickCount++;
         GameObject brickClone = Instantiate(brickAddPrefab, transform);
@@ -174,93 +141,49 @@ public class Player : MonoBehaviour
         BricksList.Add(brickClone);
         brickWallHeight += brickOffset;
         modelTransform.localPosition = new Vector3(0, brickWallHeight, 0);
+        UIManager.instance.SetCoin(brickCount);
     }
 
-    void RemoveBrick(Transform target)
+    public void RemoveBrick()
     {
-        GameObject returnBrick = Instantiate(brickAddPrefab, new Vector3(target.position.x, target.position.y + offsetGiveBackBrick, target.position.z), Quaternion.identity);
-        returnBrick.transform.localRotation = Quaternion.Euler(-90, 0, 0);
         if (BricksList.Count > 0)
         {
             Destroy(BricksList[BricksList.Count - 1]);
             BricksList.Remove(BricksList[BricksList.Count - 1]);
         }
+        else
+        {
+            isStop = true;
+            LevelManager.instance.Lose();
+        }
         brickWallHeight -= brickOffset;
         modelTransform.localPosition = new Vector3(0, brickWallHeight, 0);
     }
 
-    void ClearBrick()
+    public void ClearBrick()
     {
-        isWin = true;
+        isStop = true;
         for(int i = BricksList.Count -1; i >= 0; i--)
         {
             Destroy(BricksList[i]);
             BricksList.Remove(BricksList[i]);
         }
         modelTransform.localPosition = new Vector3(0, -0.5f, 0);
+        ChangeAnim(animWin);
     }
 
-    private void OnTriggerEnter(Collider other)
+    public void AddDiamond()
     {
-        if (other.gameObject.CompareTag("BrickBlock"))
-        {
-            AddBrick();
-            UIManager.instance.SetCoin(brickCount);
-            Destroy(other.gameObject);
-        }
-        if (other.gameObject.CompareTag("UnBrickBlock"))
-        {
-            RemoveBrick(other.transform);
-            other.gameObject.tag = "Untagged";
-            if (BricksList.Count == 0)
-            {
-                isStop = true;
-                LevelManager.instance.Lose();
-            }
-        }
-        if (other.gameObject.CompareTag("FinishBox"))
-        {
-            ClearBrick();
-            _animator.SetInteger(aniIDSetInteger, (int)Ani.Win);
-            LevelManager.instance.Win();
-        }
-
-        if (other.gameObject.CompareTag("Diamond"))
-        {
-            isStop = true;
-            int diamondThisReceive = LevelManager.instance.DiamondPoint();
-            diamondCount += diamondThisReceive;
-            UIManager.instance.SetDiamond(diamondCount);
-            UIManager.instance.SetNumber(diamondThisReceive);
-            UIManager.instance.DiamondUIAni();
-        }
+        isStop = true;
+        int diamondThisReceive = LevelManager.instance.DiamondPoint();
+        diamondCount += diamondThisReceive;
+        UIManager.instance.SetDiamond(diamondCount);
+        UIManager.instance.SetNumber(diamondThisReceive);
+        UIManager.instance.DiamondUIAni();
     }
-
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.gameObject.CompareTag("Diamond"))
-        {
-            Destroy(other.gameObject);
-        }
-    }
-
     public void ContinuePlayer()
     {
         isStop = false;
-    }
-
-    public enum Direct
-    {
-        Forward,
-        Back,
-        Right,
-        Left,
-        None,
-    }
-    public enum Ani
-    {
-        Idle = 1,
-        Win = 2
     }
 }
 

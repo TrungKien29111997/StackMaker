@@ -11,8 +11,7 @@ GameObject:
   - component: {fileID: 4092116075094663}
   - component: {fileID: 33098313783901240}
   - component: {fileID: 23759597557563389}
-  - component: {fileID: 7790987805983019663}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: di
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -84,19 +83,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &7790987805983019663
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1025957228935223}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 0.99999905, y: 1.0000014, z: 1.0000031}
-  m_Center: {x: 0.0000010728836, y: 0.00000059604656, z: 0}
 --- !u!1 &1045506591760351
 GameObject:
   m_ObjectHideFlags: 0
@@ -106,7 +92,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4919342471493218070}
-  m_Layer: 0
+  - component: {fileID: 6558793117625315782}
+  - component: {fileID: 341616759162452143}
+  m_Layer: 7
   m_Name: Pivote_Brick
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -130,6 +118,32 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: -0, z: -0}
+--- !u!65 &6558793117625315782
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1045506591760351}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 5.4522223, z: 1}
+  m_Center: {x: 0, y: 0.20384765, z: 0}
+--- !u!114 &341616759162452143
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1045506591760351}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c43da110122be747ac4402ec6635e2d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  brickObj: {fileID: 1494017965046362}
 --- !u!1 &1494017965046362
 GameObject:
   m_ObjectHideFlags: 0
@@ -141,10 +155,9 @@ GameObject:
   - component: {fileID: 4001877582132777}
   - component: {fileID: 33926114544505843}
   - component: {fileID: 23310507170802036}
-  - component: {fileID: 4138946906169892210}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: dimian
-  m_TagString: BrickBlock
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -214,16 +227,3 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &4138946906169892210
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1494017965046362}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1.0000005, y: 1.0000004, z: 0.29989845}
-  m_Center: {x: 0.000006571415, y: -0.0000001728354, z: 0.14994933}

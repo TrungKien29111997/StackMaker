@@ -113,8 +113,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d254d11cba167a429b80ad908d8ae7c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _animator: {fileID: 9163997747224701795}
-  direct: 0
+  anim: {fileID: 9163997747224701795}
+  directPlayer: 0
   modelTransform: {fileID: 6748748496740398690}
   speed: 30
   frontRayTransform: {fileID: 9113435277857965452}

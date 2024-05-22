@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 public class UIManager : MonoBehaviour
 {
     public static UIManager instance;
-    [SerializeField] Animator _animator;
+    [SerializeField] Animator anim;
     [SerializeField] TextMeshProUGUI coinTex;
     [SerializeField] TextMeshProUGUI diamondTex;
     [SerializeField] TextMeshProUGUI numberTex;
@@ -29,10 +29,10 @@ public class UIManager : MonoBehaviour
         OnInit();
     }
 
-    void OnInit()
+    public void OnInit()
     {
-        scenceIndex.text = SceneManager.GetActiveScene().name;
-        _animator.SetInteger(aniUIID, (int)AniUI.Idle);
+        scenceIndex.text = "LEVEL" + (LevelManager.instance.CurrentLevel + 1).ToString();
+        anim.SetInteger(aniUIID, (int)AniUI.Idle);
         Invoke(nameof(ResetAniInt), 0.5f);
     }
 
@@ -58,30 +58,30 @@ public class UIManager : MonoBehaviour
     }
     public void IdleUIAni()
     {
-        _animator.SetInteger(aniUIID, (int)AniUI.Idle);
+        anim.SetInteger(aniUIID, (int)AniUI.Idle);
         Invoke(nameof(ResetAniInt), 0.5f);
     }
 
     public void WinUIAni()
     {
-        _animator.SetInteger(aniUIID, (int)AniUI.Win);
+        anim.SetInteger(aniUIID, (int)AniUI.Win);
         Invoke(nameof(ResetAniInt), 0.5f);
     }
 
     public void LoseUIAni()
     {
-        _animator.SetInteger(aniUIID, (int)AniUI.Lose);
+        anim.SetInteger(aniUIID, (int)AniUI.Lose);
         Invoke(nameof(ResetAniInt), 0.5f);
     }
 
     public void DiamondUIAni()
     {
-        _animator.SetInteger(aniUIID, (int)AniUI.Diamond);
+        anim.SetInteger(aniUIID, (int)AniUI.Diamond);
         Invoke(nameof(ResetAniInt), 0.5f);
     }
     void ResetAniInt()
     {
-        _animator.SetInteger(aniUIID, -1);
+        anim.SetInteger(aniUIID, -1);
     }
 
     public enum AniUI
